@@ -1,0 +1,45 @@
+.acc-header {
+    background-color: lemonchiffon;
+    border: 1px solid green;
+    font-size: 18;
+    width: 200px;
+    text-align: center;
+}
+
+.acc-container-body {
+    background-color: honeydew;
+    border: 1px solid green;
+    display: none;
+    width: 600px;
+}
+
+.acc-show {
+    display: flex;
+}
+
+.acc-hide {
+    display: none;
+}
+
+.acc-background {
+    background-color: rgb(162, 0, 255);
+}
+
+
+/* .acc-container-header {
+    /* display: flex; */
+
+
+/* flex-wrap: wrap; */
+
+
+/* width: 400px;
+}   */
+
+.active-color {
+    background-color: hotpink;
+}
+
+.acc-container-header {
+    display: flex;
+}
