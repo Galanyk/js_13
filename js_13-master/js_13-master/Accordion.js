@@ -1,122 +1,108 @@
 class Accordeon {
+    static CLASSES = {
+        ACCORDEON: 'container',
+        BACKGROUND: 'active-color',
+        BODY_CLASS: 'acc-body',
+        CONTAINER_HEADER: 'acc-container-header',
+        CONTAINER_BODY: 'acc-container-body',
+        HEADER_CLASS: 'acc-header',
+        SHOW: 'acc-show',
+        CONTINER_HEADER_INDEX: 0,
+        CONTAINER_BODY_INDEX: 1,
+    };
 
+    childrenEl = null;
 
-    static ACCORDEON = 'accordeon-component';
-    static BACKGROUND = 'acc-background';
-    static BACGROUND_BLUE = 'acc-header acc-background'
-    static BODY_CLASS = 'acc-body';
-    static BODYCLASS_INDEX = 1;
-    static CONTAINER_HEADER = 'acc-container-header';
-    static CONTAINER_BODY = 'acc-container-body';
-    static DISPLAY = 'acc-body acc-show'
-    static HEADER_CLASS = 'acc-header';
-    static HIDE = 'acc-hide';
-    static SHOW = 'acc-show';
+    constructor(className) {
+        this.container = Accordeon.getByClassName(className);
+        this.init();
+    }
 
+    init() {
+        this.setClasses();
+        this.setChildrenClass(this.childrenEl[Accordeon.CLASSES.CONTINER_HEADER_INDEX].children,
+            Accordeon.CLASSES.HEADER_CLASS);
+        this.setChildrenClass(this.childrenEl[Accordeon.CLASSES.CONTAINER_BODY_INDEX].children,
+            Accordeon.CLASSES.BODY_CLASS);
+        this.setListener(this.container, 'click', this.handleClick);
+    }
 
-
-    isShow = false;
-
-    constructor(el) {
-
-        this.el = el;
-        el.addEventListener('click', this.handleClick.bind(this));
-        Array.prototype.forEach.call(el.children, (element, i) => {
+    setClasses() {
+        // this.setClass(this.container, Accordeon.CLASSES.ACCORDEON);
+        this.setChildren(this.container);
+        Array.prototype.forEach.call(this.childrenEl, (e, i) => {
             switch (i) {
-                case 0:
-                    this.setClasses(element, Accordeon.HEADER_CLASS, Accordeon.CONTAINER_HEADER);
+                case Accordeon.CLASSES.CONTINER_HEADER_INDEX:
+                    this.setClass(e, Accordeon.CLASSES.CONTAINER_HEADER);
                     break;
-                case 1:
-                    this.setClasses(element, Accordeon.BODY_CLASS, Accordeon.CONTAINER_BODY);
+                case Accordeon.CLASSES.CONTAINER_BODY_INDEX:
+                    this.setClass(e, Accordeon.CLASSES.CONTAINER_BODY);
                     break;
             }
+            ++this.index;
         });
     }
 
-    handleClick(e) {
+    setChildrenClass(items, nameClass) {
+        Array.prototype.forEach.call(items, (e) => {
+            this.setClass(e, nameClass);
+        });
+    }
 
-        const container = (e.target.closest(`.${Accordeon.ACCORDEON}`));
-        const containerChildrens = (e.target.closest(`.${Accordeon.ACCORDEON}`).children[Accordeon.BODYCLASS_INDEX]);
-        if (e.target.classList.value === Accordeon.HEADER_CLASS ||
-            e.target.classList.value === Accordeon.BACGROUND_BLUE) {
-            if (!this.isShow) {
-                this.isShow = true;
-                containerChildrens.classList.toggle(Accordeon.SHOW);
-                for (let i = 0; i < containerChildrens.children.length; ++i) {
-                    containerChildrens.children[i].classList.toggle(Accordeon.HIDE);
-                }
-            }
+    setClass(item, className) {
+        item.classList.add(className);
+    }
 
-            for (let i = 0; i < container.children[0].children.length; ++i) {
-                if (container.children[0].children[i] === e.target) {
-                    if (containerChildrens.children[i].classList.value != Accordeon.DISPLAY) {
-                        containerChildrens.children[i].classList.toggle(Accordeon.HIDE);
-                        containerChildrens.children[i].classList.toggle(Accordeon.SHOW);
-                        e.target.classList.toggle(Accordeon.BACKGROUND)
-                    }
-                } else if (containerChildrens.children[i].classList.value === Accordeon.DISPLAY) {
-                    containerChildrens.children[i].classList.toggle(Accordeon.SHOW);
-                    containerChildrens.children[i].classList.toggle(Accordeon.HIDE);
-                    if (container.children[0].children[i].classList.value === Accordeon.BACGROUND_BLUE) {
-                        container.children[0].children[i].classList.toggle(Accordeon.BACKGROUND)
-                    }
-                }
-            }
+    setChildren(element) {
+        this.childrenEl = element.children;
+    }
+
+    setListener(element, event, callBeack) {
+        element.addEventListener(event, callBeack);
+    }
+
+    static getByClassName(className) {
+        return document.querySelector(`.${className}`);
+    }
+
+    handleClick = (e) => {
+        if (e.target.classList.contains(Accordeon.CLASSES.HEADER_CLASS)) {
+
+            const indexEl = this.fineIndex(e.target);
+            this.setActive(indexEl);
         }
     }
 
-    setClasses(element, classChildren, classContainer) {
-        for (let i = 0; i < element.children.length; ++i)
-            element.children[i].classList = classChildren;
-        element.classList = classContainer;
+    fineIndex(element) {
+        const el = element.closest(`.${Accordeon.CLASSES.CONTAINER_HEADER}`);
+        return Array.prototype.indexOf.call(el.children, element)
+
+    }
+
+    setActive(indexEl) {
+        Array.prototype.forEach.call(this.childrenEl, (element, i) => {
+            switch (i) {
+                case Accordeon.CLASSES.CONTINER_HEADER_INDEX:
+                    Array.prototype.forEach.call(element.children, (e, i) => {
+                        const HEADER = e
+                        if (i === indexEl) {
+                            HEADER.classList.add(Accordeon.CLASSES.BACKGROUND);
+                        } else {
+                            HEADER.classList.remove(Accordeon.CLASSES.BACKGROUND);
+                        }
+                    });
+                    break;
+                case Accordeon.CLASSES.CONTAINER_BODY_INDEX:
+                    Array.prototype.forEach.call(element.children, (e, i) => {
+                        const BODY = e
+                        if (i === indexEl) {
+                            BODY.classList.add(Accordeon.CLASSES.SHOW);
+                        } else {
+                            BODY.classList.remove(Accordeon.CLASSES.SHOW);
+                        }
+                    });
+                    break;
+            }
+        })
     }
 }
-
-
-
-// class Accordeon {
-//     static HEADER_CLASS = 'acc-header';
-//     static BODY_CLASS = "acc-body";
-//     static CONTAINER = 'acc-container';
-//     static SHOW = 'acc-show';
-//     // static COLOR = 'active-color';
-//     children = null;
-//     constructor(el) {
-//         this.el = el;
-//         el.addEventListener('click', this.handleClick.bind(this));
-//         // el.addEventListener('click', (e) => this.handleClick(e));
-//         el.addEventListener('click', this.handleClick.bind(this));
-
-//         this.getChildren(this.el);
-//         Array.prototype.forEach.call(this.children, (element) => {
-//             this.setClassaes(element);
-//         });
-//     }
-//     handleClick(e){
-//         if(e.target.classList.contains(Accordeon.HEADER_CLASS)) {
-//             const container = e.target.closest(`.${Accordeon.CONTAINER}`);
-//             const body = container.querySelector(`.${Accordeon.BODY_CLASS}`);
-
-//             const bodys = this.el.querySelectorAll(`.${Accordeon.BODY_CLASS}`);
-
-//             Array.prototype.forEach.call(bodys, (child) => {
-//                 if(child.classList.contains(Accordeon.SHOW)){
-//                     child.classList.remove(Accordeon.SHOW)
-//                 }
-//             });
-//         body.classList.toggle(Accordeon.SHOW);
-//         }
-//     }    
-//     getChildren(el){
-//         this.children = [...el.children];
-//     }
-//     setClassaes(el) {
-//         const [header, body] = el.children;
-//         el.classList.add(Accordeon.CONTAINER);
-//         header.classList.add(Accordeon.HEADER_CLASS);
-//         body.classList.add(Accordeon.BODY_CLASS);
-//         // header.toggle.add(Accordeon.COLOR)
-//     }
-
-
-// }
