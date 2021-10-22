@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 .acc-header {
     background-color: lemonchiffon;
     border: 1px solid green;

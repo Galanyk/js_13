@@ -28,7 +28,6 @@ class Accordeon {
     }
 
     setClasses() {
-        // this.setClass(this.container, Accordeon.CLASSES.ACCORDEON);
         this.setChildren(this.container);
         Array.prototype.forEach.call(this.childrenEl, (e, i) => {
             switch (i) {
