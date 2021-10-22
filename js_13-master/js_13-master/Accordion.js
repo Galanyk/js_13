@@ -66,7 +66,6 @@ class Accordeon {
 
     handleClick = (e) => {
         if (e.target.classList.contains(Accordeon.CLASSES.HEADER_CLASS)) {
-
             const indexEl = this.fineIndex(e.target);
             this.setActive(indexEl);
         }
@@ -74,8 +73,7 @@ class Accordeon {
 
     fineIndex(element) {
         const el = element.closest(`.${Accordeon.CLASSES.CONTAINER_HEADER}`);
-        return Array.prototype.indexOf.call(el.children, element)
-
+        return Array.prototype.indexOf.call(el.children, element);
     }
 
     setActive(indexEl) {
@@ -83,7 +81,7 @@ class Accordeon {
             switch (i) {
                 case Accordeon.CLASSES.CONTINER_HEADER_INDEX:
                     Array.prototype.forEach.call(element.children, (e, i) => {
-                        const HEADER = e
+                        const HEADER = e;
                         if (i === indexEl) {
                             HEADER.classList.add(Accordeon.CLASSES.BACKGROUND);
                         } else {
